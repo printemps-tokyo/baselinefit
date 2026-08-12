@@ -1,0 +1,16 @@
+# Paths baselinefit skips when scanning its own repository.
+#
+# This file uses gitignore syntax and is read from any directory being scanned,
+# so you can drop one into your own project too.
+#
+# The data files below quote, by design, every pattern baselinefit looks for.
+# Scanning them reports the catalog rather than any real code.
+src/features.json
+tools/detectors.json
+
+# The documentation shows example findings and example output.
+README.md
+CONTRIBUTING.md
+
+# The demo site is deliberately full of findings; the test suite scans it.
+tests/fixtures/

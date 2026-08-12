@@ -1,0 +1,40 @@
+[package]
+name = "baselinefit"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Audit a codebase's CSS and JS against Web Platform Baseline in both directions: what is not safe for your target yet, and which prefixes, @supports guards and polyfills are now dead weight. Offline Rust CLI."
+authors = ["printemps.tokyo <develop@printemps.tokyo>"]
+repository = "https://github.com/printemps-tokyo/baselinefit"
+homepage = "https://github.com/printemps-tokyo/baselinefit"
+readme = "README.md"
+keywords = ["baseline", "css", "browser-support", "polyfill", "cli"]
+categories = ["command-line-utilities", "development-tools", "web-programming"]
+exclude = ["/tests", "/tools", "/.github"]
+
+[[bin]]
+name = "baselinefit"
+path = "src/main.rs"
+
+[lib]
+name = "baselinefit"
+path = "src/lib.rs"
+
+[dependencies]
+# Error context for the thin binary layer (org convention).
+anyhow = "1"
+# Argument parsing (derive API, org convention).
+clap = { version = "4", features = ["derive"] }
+# gitignore-aware directory walk, the same crate sunsetscan and repotome use.
+# Its `overrides` module also supplies the glob engine for --exclude and for
+# detector scopes, so no separate globset dependency is needed.
+ignore = "0.4"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"

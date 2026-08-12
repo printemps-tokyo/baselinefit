@@ -1,0 +1,397 @@
+{
+  "//": "baselinefit detector rules. THIS FILE IS HAND-AUTHORED and contains no",
+  "//1": "Baseline facts: no names, no statuses, no dates. Every key here is a",
+  "//2": "web-features feature id, and tools/fetch-data.py refuses to build unless",
+  "//3": "each one exists in the real web-features dataset. The dataset supplies",
+  "//4": "name / description / spec / status / dates; this file supplies only the",
+  "//5": "text patterns baselinefit greps for and the prose advice it prints.",
+  "schema": 1,
+  "features": {
+    "aborting": {
+      "removable_action": "Delete the abortcontroller-polyfill import and its bundler alias; AbortController and AbortSignal are available natively.",
+      "detectors": [
+        { "direction": "removable", "kind": "package", "text": "abortcontroller-polyfill", "what": "AbortController polyfill" }
+      ]
+    },
+    "anchor-positioning": {
+      "risk_action": "Anchor positioning is not Baseline in any browser set yet. Keep a JavaScript positioner, or gate the CSS behind @supports (anchor-name: --a).",
+      "removable_action": "Do not remove the JavaScript positioner yet. This is a forward pointer only: when CSS anchor positioning reaches the level you target, most tether/flip logic collapses into anchor-name, position-anchor and position-try-fallbacks.",
+      "detectors": [
+        { "direction": "risk", "kind": "property", "text": "anchor-name", "what": "anchor positioning property" },
+        { "direction": "risk", "kind": "property", "text": "position-anchor", "what": "anchor positioning property" },
+        { "direction": "risk", "kind": "property", "text": "position-area", "what": "anchor positioning property" },
+        { "direction": "risk", "kind": "property", "text": "position-try-fallbacks", "what": "anchor positioning property" },
+        { "direction": "risk", "kind": "at-rule", "text": "@position-try", "what": "anchor positioning at-rule" },
+        { "direction": "risk", "kind": "function", "text": "anchor-size(", "what": "anchor positioning function" },
+        { "direction": "removable", "when": "always", "kind": "package", "text": "@floating-ui/", "what": "JavaScript positioning library" },
+        { "direction": "removable", "when": "always", "kind": "package", "text": "@popperjs/core", "what": "JavaScript positioning library" },
+        { "direction": "removable", "when": "always", "kind": "package", "text": "popper.js", "what": "JavaScript positioning library" }
+      ]
+    },
+    "animations-css": {
+      "removable_action": "Drop the -webkit- animation declarations and the @-webkit-keyframes block; the unprefixed forms are enough.",
+      "detectors": [
+        { "direction": "removable", "kind": "property-stem", "text": "-webkit-animation", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-moz-animation", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "at-rule", "text": "@-webkit-keyframes", "what": "prefixed at-rule" },
+        { "direction": "removable", "kind": "at-rule", "text": "@-moz-keyframes", "what": "prefixed at-rule" }
+      ]
+    },
+    "appearance": {
+      "removable_action": "Delete the prefixed declarations and keep appearance: none.",
+      "detectors": [
+        { "direction": "removable", "kind": "property", "text": "-webkit-appearance", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property", "text": "-moz-appearance", "what": "vendor prefix" }
+      ]
+    },
+    "aspect-ratio": {
+      "removable_action": "The @supports guard around aspect-ratio always passes now. Unwrap the block and delete the padding-top ratio hack it was protecting.",
+      "detectors": [
+        { "direction": "removable", "kind": "supports", "text": "aspect-ratio", "what": "dead @supports guard" }
+      ]
+    },
+    "async-clipboard": {
+      "risk_action": "navigator.clipboard.write / read need a fallback at this target. document.execCommand('copy') still works as one, or feature-detect with 'clipboard' in navigator.",
+      "detectors": [
+        { "direction": "risk", "kind": "ident", "text": "navigator.clipboard", "what": "async clipboard API" },
+        { "direction": "risk", "kind": "ident", "text": "ClipboardItem", "what": "async clipboard API" }
+      ]
+    },
+    "backdrop-filter": {
+      "risk_action": "backdrop-filter degrades to no blur rather than breaking, but the panel behind it may become unreadable. Set an opaque fallback background-color first, then override it inside @supports (backdrop-filter: blur(1px)).",
+      "removable_action": "Safari has shipped the unprefixed property since 18, so -webkit-backdrop-filter is only needed for older Safari. Remove it once your target no longer includes those versions.",
+      "detectors": [
+        { "direction": "risk", "kind": "property", "text": "backdrop-filter", "what": "backdrop-filter property" },
+        { "direction": "removable", "kind": "property", "text": "-webkit-backdrop-filter", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "supports", "text": "backdrop-filter", "what": "dead @supports guard" }
+      ]
+    },
+    "border-radius": {
+      "removable_action": "Delete the prefixed declarations; border-radius has been unprefixed everywhere for years.",
+      "detectors": [
+        { "direction": "removable", "kind": "property", "text": "-webkit-border-radius", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property", "text": "-moz-border-radius", "what": "vendor prefix" }
+      ]
+    },
+    "box-shadow": {
+      "removable_action": "Delete the prefixed declarations; box-shadow has been unprefixed everywhere for years.",
+      "detectors": [
+        { "direction": "removable", "kind": "property", "text": "-webkit-box-shadow", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property", "text": "-moz-box-shadow", "what": "vendor prefix" }
+      ]
+    },
+    "cascade-layers": {
+      "risk_action": "A browser that does not understand @layer drops the whole block, so the layered rules vanish rather than losing priority. Ship the styles unlayered at this target.",
+      "detectors": [
+        { "direction": "risk", "kind": "at-rule", "text": "@layer", "what": "cascade layers at-rule" },
+        { "direction": "risk", "kind": "function", "text": "layer(", "what": "layer() in @import" }
+      ]
+    },
+    "clip-path": {
+      "removable_action": "Delete -webkit-clip-path and keep the unprefixed declaration.",
+      "detectors": [
+        { "direction": "removable", "kind": "property", "text": "-webkit-clip-path", "what": "vendor prefix" }
+      ]
+    },
+    "color-mix": {
+      "risk_action": "color-mix() in an unsupported browser makes the whole declaration invalid, so the property falls back to its inherited or initial value. Precede it with a static colour declaration.",
+      "detectors": [
+        { "direction": "risk", "kind": "function", "text": "color-mix(", "what": "color-mix() function" }
+      ]
+    },
+    "container-queries": {
+      "risk_action": "A dropped @container block leaves the element at its default styling. Write the mobile-first rule outside the container query so the unstyled state is the usable one.",
+      "removable_action": "The @supports guard for container queries always passes now, and container-query-polyfill can leave the bundle.",
+      "detectors": [
+        { "direction": "risk", "kind": "at-rule", "text": "@container", "what": "container query at-rule" },
+        { "direction": "risk", "kind": "property", "text": "container-type", "what": "container query property" },
+        { "direction": "risk", "kind": "property", "text": "container-name", "what": "container query property" },
+        { "direction": "risk", "kind": "unit", "text": "cqw", "what": "container query unit" },
+        { "direction": "risk", "kind": "unit", "text": "cqh", "what": "container query unit" },
+        { "direction": "risk", "kind": "unit", "text": "cqi", "what": "container query unit" },
+        { "direction": "risk", "kind": "unit", "text": "cqb", "what": "container query unit" },
+        { "direction": "risk", "kind": "unit", "text": "cqmin", "what": "container query unit" },
+        { "direction": "risk", "kind": "unit", "text": "cqmax", "what": "container query unit" },
+        { "direction": "removable", "kind": "supports", "text": "container-type", "what": "dead @supports guard" },
+        { "direction": "removable", "kind": "package", "text": "container-query-polyfill", "what": "container query polyfill" }
+      ]
+    },
+    "content-visibility": {
+      "risk_action": "content-visibility: auto is a progressive enhancement, but contain-intrinsic-size must be set with it or scrollbars jump. Unsupported browsers simply render everything.",
+      "detectors": [
+        { "direction": "risk", "kind": "property", "text": "content-visibility", "what": "content-visibility property" }
+      ]
+    },
+    "custom-properties": {
+      "removable_action": "Remove css-vars-ponyfill and its build step; custom properties resolve natively.",
+      "detectors": [
+        { "direction": "removable", "kind": "package", "text": "css-vars-ponyfill", "what": "custom properties polyfill" }
+      ]
+    },
+    "dialog": {
+      "removable_action": "Remove dialog-polyfill, its stylesheet and the registerDialog() calls; <dialog>, showModal() and ::backdrop are native.",
+      "detectors": [
+        { "direction": "removable", "kind": "package", "text": "dialog-polyfill", "what": "<dialog> polyfill" }
+      ]
+    },
+    "fetch": {
+      "removable_action": "Remove the fetch polyfill import and any bundler alias for it.",
+      "detectors": [
+        { "direction": "removable", "kind": "package", "text": "whatwg-fetch", "what": "fetch polyfill" },
+        { "direction": "removable", "kind": "package", "text": "isomorphic-fetch", "what": "fetch polyfill" }
+      ]
+    },
+    "field-sizing": {
+      "risk_action": "field-sizing: content is a recent addition. Keep the JavaScript autogrow or the rows/cols sizing you already have as the fallback.",
+      "detectors": [
+        { "direction": "risk", "kind": "property", "text": "field-sizing", "what": "field-sizing property" }
+      ]
+    },
+    "filter": {
+      "removable_action": "Delete -webkit-filter and keep the unprefixed declaration. This is not the same property as backdrop-filter.",
+      "detectors": [
+        { "direction": "removable", "kind": "property", "text": "-webkit-filter", "what": "vendor prefix" }
+      ]
+    },
+    "flexbox": {
+      "removable_action": "Delete the -webkit- flexbox declarations and the @supports (display: flex) guard. Note that display: -webkit-box and -webkit-box-orient are deliberately NOT reported: they are still load-bearing for -webkit-line-clamp.",
+      "detectors": [
+        { "direction": "removable", "kind": "property-stem", "text": "-webkit-flex", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-webkit-align", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property", "text": "-webkit-justify-content", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property", "text": "-webkit-order", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-ms-flex", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "declaration", "text": "display:-webkit-flex", "what": "prefixed display value" },
+        { "direction": "removable", "kind": "declaration", "text": "display:-ms-flexbox", "what": "prefixed display value" },
+        { "direction": "removable", "kind": "supports", "text": "display:flex", "what": "dead @supports guard" }
+      ]
+    },
+    "flexbox-gap": {
+      "removable_action": "The @supports (gap: ...) guard always passes now. Unwrap it and delete the negative-margin gutter fallback underneath.",
+      "detectors": [
+        { "direction": "removable", "kind": "supports", "text": "gap", "what": "dead @supports guard" }
+      ]
+    },
+    "focus-visible": {
+      "removable_action": "Remove the focus-visible polyfill script, the .js-focus-visible / .focus-visible class plumbing and the @supports selector(:focus-visible) guard. Style :focus-visible directly.",
+      "detectors": [
+        { "direction": "removable", "kind": "package", "text": "focus-visible.js", "what": ":focus-visible polyfill" },
+        { "direction": "removable", "kind": "package", "text": "focus-visible.min.js", "what": ":focus-visible polyfill" },
+        { "direction": "removable", "kind": "package", "text": "js-focus-visible", "what": ":focus-visible polyfill marker class" },
+        { "direction": "removable", "kind": "supports-selector", "text": ":focus-visible", "what": "dead @supports guard" }
+      ]
+    },
+    "grid": {
+      "removable_action": "The @supports (display: grid) guard always passes now. Unwrap the block and delete the float or inline-block fallback it was guarding.",
+      "detectors": [
+        { "direction": "removable", "kind": "supports", "text": "display:grid", "what": "dead @supports guard" }
+      ]
+    },
+    "has": {
+      "risk_action": ":has() fails the whole selector list in a browser that does not support it, so the rule never applies. Keep a class toggled from JavaScript at this target.",
+      "removable_action": "The @supports selector(:has(...)) guard always passes now, and the css-has-pseudo build step can be dropped.",
+      "detectors": [
+        { "direction": "risk", "kind": "selector", "text": ":has(", "what": ":has() selector" },
+        { "direction": "removable", "kind": "supports-selector", "text": ":has(", "what": "dead @supports guard" },
+        { "direction": "removable", "kind": "package", "text": "css-has-pseudo", "what": ":has() build-time polyfill" }
+      ]
+    },
+    "hyphens": {
+      "removable_action": "Delete -webkit-hyphens and -ms-hyphens; the unprefixed property is enough. Keep the lang attribute on the document, which hyphenation still needs.",
+      "detectors": [
+        { "direction": "removable", "kind": "property", "text": "-webkit-hyphens", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property", "text": "-ms-hyphens", "what": "vendor prefix" }
+      ]
+    },
+    "intersection-observer": {
+      "removable_action": "Remove the intersection-observer polyfill import; the API is native.",
+      "detectors": [
+        { "direction": "removable", "kind": "package", "text": "intersection-observer", "what": "IntersectionObserver polyfill" }
+      ]
+    },
+    "lh": {
+      "risk_action": "The lh unit resolves to the element's line box height. Replace it with a calc() over your line-height variable at this target.",
+      "detectors": [
+        { "direction": "risk", "kind": "unit", "text": "lh", "what": "lh length unit" }
+      ]
+    },
+    "light-dark": {
+      "risk_action": "light-dark() makes the whole declaration invalid where it is unsupported. Declare the light value normally and override it inside a prefers-color-scheme media query.",
+      "detectors": [
+        { "direction": "risk", "kind": "function", "text": "light-dark(", "what": "light-dark() function" }
+      ]
+    },
+    "masks": {
+      "risk_action": "An unsupported mask property leaves the element unmasked and fully visible, which is usually worse than not applying the effect. Gate it behind @supports.",
+      "removable_action": "Delete the -webkit-mask declarations and keep the unprefixed ones.",
+      "detectors": [
+        { "direction": "risk", "kind": "property-stem", "text": "mask", "what": "mask property" },
+        { "direction": "removable", "kind": "property-stem", "text": "-webkit-mask", "what": "vendor prefix" }
+      ]
+    },
+    "object-fit": {
+      "removable_action": "The @supports (object-fit: ...) guard always passes now, and object-fit-images / objectFitPolyfill can be deleted along with the background-image fallbacks they drove.",
+      "detectors": [
+        { "direction": "removable", "kind": "supports", "text": "object-fit", "what": "dead @supports guard" },
+        { "direction": "removable", "kind": "package", "text": "object-fit-images", "what": "object-fit polyfill" },
+        { "direction": "removable", "kind": "package", "text": "objectFitPolyfill", "what": "object-fit polyfill" }
+      ]
+    },
+    "oklab": {
+      "risk_action": "oklch() and oklab() invalidate the declaration where they are unsupported. Put an sRGB hex or rgb() declaration immediately before as the fallback.",
+      "detectors": [
+        { "direction": "risk", "kind": "function", "text": "oklch(", "what": "OkLCh colour function" },
+        { "direction": "risk", "kind": "function", "text": "oklab(", "what": "Oklab colour function" }
+      ]
+    },
+    "popover": {
+      "risk_action": "The popover attribute is inert where unsupported: the element stays in the flow and visible. Keep the polyfill or the JavaScript dialog at this target.",
+      "removable_action": "Remove @oddbird/popover-polyfill and its stylesheet; popover, popovertarget and showPopover() are native.",
+      "detectors": [
+        { "direction": "risk", "kind": "ident", "text": "showPopover", "what": "Popover API" },
+        { "direction": "risk", "kind": "ident", "text": "hidePopover", "what": "Popover API" },
+        { "direction": "risk", "kind": "ident", "text": "togglePopover", "what": "Popover API" },
+        { "direction": "risk", "kind": "ident", "text": "popovertarget", "what": "Popover API attribute" },
+        { "direction": "removable", "kind": "package", "text": "@oddbird/popover-polyfill", "what": "Popover polyfill" }
+      ]
+    },
+    "resize-observer": {
+      "risk_action": "Fall back to a window resize listener, or keep a polyfill, at this target.",
+      "removable_action": "Remove resize-observer-polyfill / @juggle/resize-observer and use the global ResizeObserver.",
+      "detectors": [
+        { "direction": "risk", "kind": "ident", "text": "ResizeObserver", "what": "ResizeObserver API" },
+        { "direction": "removable", "kind": "package", "text": "resize-observer-polyfill", "what": "ResizeObserver polyfill" },
+        { "direction": "removable", "kind": "package", "text": "@juggle/resize-observer", "what": "ResizeObserver polyfill" }
+      ]
+    },
+    "rlh": {
+      "risk_action": "The rlh unit resolves against the root line box. Replace it with a calc() over a root custom property at this target.",
+      "detectors": [
+        { "direction": "risk", "kind": "unit", "text": "rlh", "what": "rlh length unit" }
+      ]
+    },
+    "scope": {
+      "risk_action": "An unsupported @scope block is dropped entirely, taking its rules with it. Scope with a class or a data attribute at this target.",
+      "detectors": [
+        { "direction": "risk", "kind": "at-rule", "text": "@scope", "what": "@scope at-rule" }
+      ]
+    },
+    "scroll-behavior": {
+      "removable_action": "Remove smoothscroll-polyfill and its polyfill() call; scroll-behavior: smooth and the behavior: 'smooth' scroll options work natively.",
+      "detectors": [
+        { "direction": "removable", "kind": "package", "text": "smoothscroll-polyfill", "what": "smooth scrolling polyfill" },
+        { "direction": "removable", "kind": "package", "text": "scroll-behavior-polyfill", "what": "smooth scrolling polyfill" }
+      ]
+    },
+    "scrollbar-gutter": {
+      "risk_action": "Without scrollbar-gutter the layout shifts when a scrollbar appears. That is the pre-existing behaviour, so this is a safe enhancement, but do not rely on the reserved space in measurements.",
+      "detectors": [
+        { "direction": "risk", "kind": "property", "text": "scrollbar-gutter", "what": "scrollbar-gutter property" }
+      ]
+    },
+    "shared-workers": {
+      "risk_action": "SharedWorker is missing on some targets and has historically been absent from Chrome on Android. Feature-detect and fall back to a dedicated Worker per tab, or to BroadcastChannel for cross-tab messaging.",
+      "detectors": [
+        { "direction": "risk", "kind": "ident", "text": "SharedWorker", "what": "SharedWorker API" }
+      ]
+    },
+    "starting-style": {
+      "risk_action": "Without @starting-style the entry transition simply does not play; the end state still applies. Safe as an enhancement, but do not put required styles inside the block.",
+      "detectors": [
+        { "direction": "risk", "kind": "at-rule", "text": "@starting-style", "what": "@starting-style at-rule" }
+      ]
+    },
+    "sticky-positioning": {
+      "removable_action": "Delete position: -webkit-sticky and the @supports (position: sticky) guard.",
+      "detectors": [
+        { "direction": "removable", "kind": "declaration", "text": "position:-webkit-sticky", "what": "prefixed position value" },
+        { "direction": "removable", "kind": "supports", "text": "position:sticky", "what": "dead @supports guard" }
+      ]
+    },
+    "structured-clone": {
+      "risk_action": "Fall back to a manual deep clone at this target; JSON round-tripping is not equivalent for Map, Set, Date or typed arrays.",
+      "removable_action": "Remove @ungap/structured-clone and call the global structuredClone().",
+      "detectors": [
+        { "direction": "risk", "kind": "ident", "text": "structuredClone", "what": "structuredClone()" },
+        { "direction": "removable", "kind": "package", "text": "@ungap/structured-clone", "what": "structuredClone polyfill" }
+      ]
+    },
+    "subgrid": {
+      "risk_action": "grid-template-columns: subgrid is invalid where unsupported and the track list falls back to none, collapsing the nested grid. Declare an explicit track list first.",
+      "detectors": [
+        { "direction": "risk", "kind": "declaration", "text": "grid-template-columns:subgrid", "what": "subgrid track list" },
+        { "direction": "risk", "kind": "declaration", "text": "grid-template-rows:subgrid", "what": "subgrid track list" }
+      ]
+    },
+    "text-wrap-balance": {
+      "risk_action": "text-wrap: balance is a typographic nicety; where it is unsupported the text wraps normally. Safe as an enhancement.",
+      "detectors": [
+        { "direction": "risk", "kind": "declaration", "text": "text-wrap:balance", "what": "text-wrap: balance" }
+      ]
+    },
+    "text-wrap-pretty": {
+      "risk_action": "text-wrap: pretty is not Baseline in any browser set yet. Where it is unsupported the text wraps normally, so it is safe as an enhancement but cannot be relied on.",
+      "detectors": [
+        { "direction": "risk", "kind": "declaration", "text": "text-wrap:pretty", "what": "text-wrap: pretty" }
+      ]
+    },
+    "transforms2d": {
+      "removable_action": "Delete the prefixed transform declarations and keep the unprefixed ones.",
+      "detectors": [
+        { "direction": "removable", "kind": "property-stem", "text": "-webkit-transform", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-moz-transform", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-ms-transform", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-o-transform", "what": "vendor prefix" }
+      ]
+    },
+    "transitions": {
+      "removable_action": "Delete the prefixed transition declarations and keep the unprefixed ones.",
+      "detectors": [
+        { "direction": "removable", "kind": "property-stem", "text": "-webkit-transition", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-moz-transition", "what": "vendor prefix" },
+        { "direction": "removable", "kind": "property-stem", "text": "-o-transition", "what": "vendor prefix" }
+      ]
+    },
+    "trusted-types": {
+      "risk_action": "Trusted Types enforcement is ignored where unsupported, so the Content-Security-Policy header is defence in depth rather than a guarantee. Keep sanitising on the server, and guard window.trustedTypes before calling createPolicy.",
+      "detectors": [
+        { "direction": "risk", "kind": "ident", "text": "trustedTypes", "what": "Trusted Types API" },
+        { "direction": "risk", "kind": "ident", "text": "TrustedHTML", "what": "Trusted Types API" }
+      ]
+    },
+    "urlpattern": {
+      "risk_action": "Keep the router's own matcher, or the urlpattern-polyfill, at this target.",
+      "removable_action": "Remove urlpattern-polyfill and use the global URLPattern.",
+      "detectors": [
+        { "direction": "risk", "kind": "ident", "text": "URLPattern", "what": "URLPattern API" },
+        { "direction": "removable", "kind": "package", "text": "urlpattern-polyfill", "what": "URLPattern polyfill" }
+      ]
+    },
+    "user-select": {
+      "risk_action": "user-select is not Baseline: the unprefixed property alone is not enough. Keep -webkit-user-select alongside it. baselinefit therefore never reports that prefix as removable.",
+      "detectors": [
+        { "direction": "risk", "kind": "property", "text": "user-select", "what": "user-select property" }
+      ]
+    },
+    "view-transitions": {
+      "risk_action": "Guard startViewTransition with a feature test and apply the DOM change directly when it is missing; view-transition-name on its own is inert.",
+      "detectors": [
+        { "direction": "risk", "kind": "property", "text": "view-transition-name", "what": "view transition property" },
+        { "direction": "risk", "kind": "at-rule", "text": "@view-transition", "what": "view transition at-rule" },
+        { "direction": "risk", "kind": "selector", "text": "::view-transition", "what": "view transition pseudo-element" },
+        { "direction": "risk", "kind": "ident", "text": "startViewTransition", "what": "View Transition API" }
+      ]
+    },
+    "viewport-unit-variants": {
+      "risk_action": "Precede the dynamic viewport unit with a vh or vw declaration so unsupported browsers keep a usable height.",
+      "detectors": [
+        { "direction": "risk", "kind": "unit", "text": "dvh", "what": "dynamic viewport unit" },
+        { "direction": "risk", "kind": "unit", "text": "dvw", "what": "dynamic viewport unit" },
+        { "direction": "risk", "kind": "unit", "text": "svh", "what": "small viewport unit" },
+        { "direction": "risk", "kind": "unit", "text": "svw", "what": "small viewport unit" },
+        { "direction": "risk", "kind": "unit", "text": "lvh", "what": "large viewport unit" },
+        { "direction": "risk", "kind": "unit", "text": "lvw", "what": "large viewport unit" }
+      ]
+    }
+  }
+}
