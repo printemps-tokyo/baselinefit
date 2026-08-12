@@ -47,7 +47,7 @@ jobs:
           shasum -a 256 "baselinefit-${{ matrix.target }}.tar.gz" \
             > "baselinefit-${{ matrix.target }}.tar.gz.sha256"
       - name: Upload to release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             baselinefit-${{ matrix.target }}.tar.gz
