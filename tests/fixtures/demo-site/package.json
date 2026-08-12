@@ -1,0 +1,14 @@
+{
+  "name": "baselinefit-demo-site",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Fixture used by the baselinefit test suite and by the README walkthrough.",
+  "type": "module",
+  "browserslist": "baseline widely available",
+  "dependencies": {
+    "@floating-ui/dom": "^1.6.0",
+    "js-focus-visible": "^5.2.0",
+    "resize-observer-polyfill": "^1.5.1",
+    "smoothscroll-polyfill": "^0.4.4"
+  }
+}
