@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  # Pinned on purpose. clippy ships with the toolchain and gains lints on every
+  # release, so an unpinned "stable" turns a green pull request red on somebody
+  # else's schedule. Bumping this is a deliberate, reviewable change.
+  RUST_TOOLCHAIN: 1.97.1
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test --all
+      - run: cargo build --release
+      # The snapshot has to parse and render.
+      - run: ./target/release/baselinefit --list --no-color
+      # The bundled demo site is the end-to-end smoke test: it must report in
+      # both directions, and it must report differently at two targets.
+      - run: ./target/release/baselinefit tests/fixtures/demo-site --target widely --no-color --fail-on none
+      - run: ./target/release/baselinefit tests/fixtures/demo-site --target newly --no-color --fail-on none
+      # Self-scan under --strict. The files that legitimately quote the
+      # catalog's own patterns are listed in .baselinefitignore.
+      - run: ./target/release/baselinefit . --strict --no-color
