@@ -2,6 +2,7 @@
 name = "baselinefit"
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.88"
 license = "MIT"
 description = "Audit a codebase's CSS and JS against Web Platform Baseline in both directions: what is not safe for your target yet, and which prefixes, @supports guards and polyfills are now dead weight. Offline Rust CLI."
 authors = ["printemps.tokyo <develop@printemps.tokyo>"]
