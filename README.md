@@ -61,9 +61,9 @@ Every Baseline status and date baselinefit prints is copied verbatim from the
 published [`web-features`](https://github.com/web-platform-dx/web-features)
 dataset. Nothing is written from memory.
 
-The current snapshot is **web-features 3.34.3**, retrieved **2026-08-12** from
-`https://registry.npmjs.org/web-features/-/web-features-3.34.3.tgz` (SHA-256
-`48b397fe23a8e16bc4073465f5f69a0a5b58e2b2e78ee04cb8947c49ef3611aa`). That
+The current snapshot is **web-features 3.45.0**, retrieved **2026-11-11** from
+`https://registry.npmjs.org/web-features/-/web-features-3.45.0.tgz` (SHA-256
+`f1b743f337b877178e5ddc264151e9e6627af26096ba96cddda8ddd7e6907e25`). That
 provenance is stamped into `src/features.json`, embedded in the binary, and
 printed under every report and every `--list`.
 
@@ -307,10 +307,10 @@ covered by tests.
   },
   "dataset": {
     "package": "web-features",
-    "version": "3.34.3",
-    "source_url": "https://registry.npmjs.org/web-features/-/web-features-3.34.3.tgz",
-    "sha256": "48b397fe...",
-    "retrieved_on": "2026-08-12",
+    "version": "3.45.0",
+    "source_url": "https://registry.npmjs.org/web-features/-/web-features-3.45.0.tgz",
+    "sha256": "f1b743f3...",
+    "retrieved_on": "2026-11-11",
     "generator": "tools/fetch-data.py"
   },
   "features_searched": 51,
@@ -327,7 +327,7 @@ covered by tests.
     {
       "feature": {
         "id": "container-queries",
-        "name": "Container queries",
+        "name": "Container queries (size)",
         "description": "...",
         "baseline": "high",                 // high | low | false, as web-features spells it
         "baseline_status": "Widely available",
@@ -370,7 +370,7 @@ carries the same `feature` fields plus `reaches_target`, `risk_action`,
 
 ## Feature catalog
 
-51 features from web-features 3.34.3. Statuses and dates below are as of the
+51 features from web-features 3.45.0. Statuses and dates below are as of the
 snapshot; run `baselinefit --list` for the authoritative copy in your build.
 
 | feature id | Baseline | since | risk detectors | removable detectors |
@@ -409,7 +409,7 @@ snapshot; run `baselinefit --list` for the authoritative copy in your build.
 | `popover` | Newly | 2025-01-27 | `showPopover`, `hidePopover`, `togglePopover`, `popovertarget` | `@oddbird/popover-polyfill` |
 | `resize-observer` | Widely | 2023-01-28 | `ResizeObserver` | `resize-observer-polyfill`, `@juggle/resize-observer` |
 | `rlh` | Widely | 2026-05-21 | `rlh` | - |
-| `scope` | Newly | 2025-12-12 | `@scope` | - |
+| `scope` | Newly | 2026-03-24 | `@scope` | - |
 | `scroll-behavior` | Widely | 2024-09-14 | - | `smoothscroll-polyfill`, `scroll-behavior-polyfill` |
 | `scrollbar-gutter` | Newly | 2024-12-11 | `scrollbar-gutter` | - |
 | `shared-workers` | Newly | 2026-05-05 | `SharedWorker` | - |

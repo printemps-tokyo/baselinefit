@@ -521,9 +521,9 @@ fn the_list_view_prints_the_snapshot_with_its_provenance() {
     run.has("baselinefit catalog:");
     run.has("container-queries");
     run.has("anchor-positioning");
-    run.has("Baseline data: web-features@3.34.3");
-    run.has("retrieved 2026-08-12");
-    run.has("sha256 48b397fe23a8e16bc4073465f5f69a0a5b58e2b2e78ee04cb8947c49ef3611aa");
+    run.has("Baseline data: web-features@3.45.0");
+    run.has("retrieved 2026-11-11");
+    run.has("sha256 f1b743f337b877178e5ddc264151e9e6627af26096ba96cddda8ddd7e6907e25");
     // The target changes the "reached" column, not the catalog.
     let strict = p.run(&["--list", "--target", "2015"]);
     strict.ok();
@@ -542,10 +542,10 @@ fn the_list_json_is_parseable_and_carries_the_dataset_block() {
         dataset.get("package").unwrap().as_str(),
         Some("web-features")
     );
-    assert_eq!(dataset.get("version").unwrap().as_str(), Some("3.34.3"));
+    assert_eq!(dataset.get("version").unwrap().as_str(), Some("3.45.0"));
     assert_eq!(
         dataset.get("retrieved_on").unwrap().as_str(),
-        Some("2026-08-12")
+        Some("2026-11-11")
     );
     let features = doc.get("features").unwrap().as_array().unwrap();
     assert!(features.len() >= 40);

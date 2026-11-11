@@ -2,12 +2,12 @@
   "schema": 1,
   "dataset": {
     "package": "web-features",
-    "version": "3.34.3",
-    "source_url": "https://registry.npmjs.org/web-features/-/web-features-3.34.3.tgz",
-    "sha256": "48b397fe23a8e16bc4073465f5f69a0a5b58e2b2e78ee04cb8947c49ef3611aa",
-    "retrieved_on": "2026-08-12",
+    "version": "3.45.0",
+    "source_url": "https://registry.npmjs.org/web-features/-/web-features-3.45.0.tgz",
+    "sha256": "f1b743f337b877178e5ddc264151e9e6627af26096ba96cddda8ddd7e6907e25",
+    "retrieved_on": "2026-11-11",
     "generator": "tools/fetch-data.py",
-    "note": "Baseline statuses and dates below are copied verbatim from web-features@3.34.3. This is a snapshot: re-run the generator to refresh it."
+    "note": "Baseline statuses and dates below are copied verbatim from web-features@3.45.0. This is a snapshot: re-run the generator to refresh it."
   },
   "features": [
     {
@@ -124,7 +124,7 @@
       "caniuse": [
         "css-animation"
       ],
-      "compat_features_count": 68,
+      "compat_features_count": 70,
       "removable_action": "Drop the -webkit- animation declarations and the @-webkit-keyframes block; the unprefixed forms are enough.",
       "detectors": [
         {
@@ -165,7 +165,9 @@
       "baseline_low_date": "2022-03-14",
       "baseline_high_date": "2024-09-14",
       "spec": "https://drafts.csswg.org/css-ui-4/#appearance-switching",
-      "caniuse": [],
+      "caniuse": [
+        "css-appearance"
+      ],
       "compat_features_count": 14,
       "removable_action": "Delete the prefixed declarations and keep appearance: none.",
       "detectors": [
@@ -373,7 +375,7 @@
       "baseline_high_date": "2023-07-21",
       "spec": "https://drafts.csswg.org/css-masking-1/#the-clip-path",
       "caniuse": [],
-      "compat_features_count": 12,
+      "compat_features_count": 13,
       "removable_action": "Delete -webkit-clip-path and keep the unprefixed declaration.",
       "detectors": [
         {
@@ -408,8 +410,8 @@
     },
     {
       "id": "container-queries",
-      "name": "Container queries",
-      "description": "Container size queries with the @container at-rule apply styles to an element based on the dimensions of its container.",
+      "name": "Container queries (size)",
+      "description": "Container size queries with the @container (…) at-rule apply styles to an element based on a dimension of its container, such as width or height.",
       "baseline": "high",
       "baseline_low_date": "2023-02-14",
       "baseline_high_date": "2025-08-14",
@@ -655,7 +657,7 @@
       "caniuse": [
         "flexbox"
       ],
-      "compat_features_count": 75,
+      "compat_features_count": 146,
       "removable_action": "Delete the -webkit- flexbox declarations and the @supports (display: flex) guard. Note that display: -webkit-box and -webkit-box-orient are deliberately NOT reported: they are still load-bearing for -webkit-line-clamp.",
       "detectors": [
         {
@@ -794,7 +796,7 @@
       "caniuse": [
         "css-grid"
       ],
-      "compat_features_count": 62,
+      "compat_features_count": 69,
       "removable_action": "The @supports (display: grid) guard always passes now. Unwrap the block and delete the float or inline-block fallback it was guarding.",
       "detectors": [
         {
@@ -950,7 +952,7 @@
       "caniuse": [
         "css-masks"
       ],
-      "compat_features_count": 28,
+      "compat_features_count": 77,
       "risk_action": "An unsupported mask property leaves the element unmasked and fully visible, which is usually worse than not applying the effect. Gate it behind @supports.",
       "removable_action": "Delete the -webkit-mask declarations and keep the unprefixed ones.",
       "detectors": [
@@ -1149,7 +1151,7 @@
       "name": "@scope",
       "description": "The @scope CSS at-rule sets the scope for a group of rules.",
       "baseline": "low",
-      "baseline_low_date": "2025-12-12",
+      "baseline_low_date": "2026-03-24",
       "baseline_high_date": null,
       "spec": "https://drafts.csswg.org/css-cascade-6/#scope-atrule",
       "caniuse": [
@@ -1485,7 +1487,7 @@
       "caniuse": [
         "trusted-types"
       ],
-      "compat_features_count": 35,
+      "compat_features_count": 44,
       "risk_action": "Trusted Types enforcement is ignored where unsupported, so the Content-Security-Policy header is defence in depth rather than a guarantee. Keep sanitising on the server, and guard window.trustedTypes before calling createPolicy.",
       "detectors": [
         {

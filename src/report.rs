@@ -728,7 +728,7 @@ mod tests {
             "REMOVABLE",
             "INFO -- pointers only, nothing to delete yet",
             "Baseline data: web-features@",
-            "retrieved 2026-08-12",
+            "retrieved 2026-11-11",
             "sha256",
             "textual, not semantic",
         ] {
@@ -840,7 +840,7 @@ mod tests {
         );
         assert_eq!(
             dataset.get("retrieved_on").unwrap().as_str(),
-            Some("2026-08-12")
+            Some("2026-11-11")
         );
 
         let totals = doc.get("totals").unwrap();
